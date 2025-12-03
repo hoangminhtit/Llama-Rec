@@ -121,8 +121,8 @@ parser.add_argument('--bert_mask_prob', type=float, default=0.25)
 ################
 # LLM Model
 ################
-parser.add_argument('--llm_base_model', type=str, default='TinyLlama/TinyLlama-1.1B-Chat-v1.0')
-parser.add_argument('--llm_base_tokenizer', type=str, default='TinyLlama/TinyLlama-1.1B-Chat-v1.0')
+parser.add_argument('--llm_base_model', type=str, default='microsoft/phi-2')
+parser.add_argument('--llm_base_tokenizer', type=str, default='microsoft/phi-2')
 parser.add_argument('--llm_max_title_len', type=int, default=32)
 parser.add_argument('--llm_max_text_len', type=int, default=1536)
 parser.add_argument('--llm_max_history', type=int, default=20)
