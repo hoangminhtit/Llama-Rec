@@ -1,4 +1,5 @@
 import json
+import os
 import os.path as osp
 from typing import Union
 
@@ -11,7 +12,9 @@ class Prompter(object):
         if not template_name:
             # template_name = "alpaca"
             template_name = "alpaca_short"
-        file_name = osp.join("dataloader", "templates", f"{template_name}.json")
+        # Get the directory where this file is located
+        current_dir = osp.dirname(osp.abspath(__file__))
+        file_name = osp.join(current_dir, "templates", f"{template_name}.json")
         if not osp.exists(file_name):
             raise ValueError(f"Can't read {file_name}")
         with open(file_name) as fp:
