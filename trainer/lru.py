@@ -79,10 +79,19 @@ class LRUTrainer(BaseTrainer):
                                                            torch.tensor(test_labels).view(-1), self.metric_ks)
             print(test_metrics)
 
-        with open(retrieved_data_path, 'wb') as f:
-            pickle.dump({'val_probs': val_probs,
-                         'val_labels': val_labels,
-                         'val_metrics': val_metrics,
-                         'test_probs': test_probs,
-                         'test_labels': test_labels,
-                         'test_metrics': test_metrics}, f)
+        print(f'Saving retrieved candidates to {retrieved_data_path}...')
+        try:
+            # Ensure directory exists
+            import os
+            os.makedirs(os.path.dirname(retrieved_data_path), exist_ok=True)
+            
+            with open(retrieved_data_path, 'wb') as f:
+                pickle.dump({'val_probs': val_probs,
+                             'val_labels': val_labels,
+                             'val_metrics': val_metrics,
+                             'test_probs': test_probs,
+                             'test_labels': test_labels,
+                             'test_metrics': test_metrics}, f)
+            print(f'Successfully saved retrieved candidates to {retrieved_data_path}')
+        except Exception as e:
+            print(f'Error saving retrieved candidates: {e}')
