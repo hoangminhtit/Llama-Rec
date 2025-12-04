@@ -107,9 +107,24 @@ class LLMDataloader():
         self.prompter = Prompter()
         
         self.llm_retrieved_path = args.llm_retrieved_path
-        print('Loading retrieved file from {}'.format(self.llm_retrieved_path))
-        retrieved_file = pickle.load(open(os.path.join(args.llm_retrieved_path,
-                                                       'retrieved.pkl'), 'rb'))
+        retrieved_pkl_path = os.path.join(args.llm_retrieved_path, 'retrieved.pkl')
+        
+        if not os.path.exists(retrieved_pkl_path):
+            raise FileNotFoundError(
+                f'\n{"="*80}\n'
+                f'ERROR: File not found: {retrieved_pkl_path}\n'
+                f'{"="*80}\n'
+                f'Please run one of the following commands first:\n\n'
+                f'  Option 1 (Full training):\n'
+                f'    python train_retriever.py\n\n'
+                f'  Option 2 (Generate only):\n'
+                f'    python generate_candidates.py\n\n'
+                f'This will create the required retrieved.pkl file.\n'
+                f'{"="*80}'
+            )
+        
+        print('Loading retrieved file from {}'.format(retrieved_pkl_path))
+        retrieved_file = pickle.load(open(retrieved_pkl_path, 'rb'))
         
         print('******************** Constructing Validation Subset ********************')
         self.val_probs = retrieved_file['val_probs']
