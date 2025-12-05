@@ -1,3 +1,4 @@
+
 from config import STATE_DICT_KEY, OPTIMIZER_STATE_DICT_KEY
 from .verb import ManualVerbalizer
 from .utils import *
@@ -119,15 +120,17 @@ class LLMTrainer(Trainer):
             metric_for_best_model=args.rerank_best_metric,
             greater_is_better=True,
         )
-        super().__init__(
-            model=model,
-            args=hf_args,
-            callbacks=[EarlyStoppingCallback(args.lora_early_stopping_patience)],
-            **kwargs)  # hf_args is now args
-
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.test_loader = test_loader
+        
+        super().__init__(
+            model=model,
+            args=hf_args,
+            train_dataset=train_loader.dataset if hasattr(train_loader, 'dataset') else None,
+            eval_dataset=val_loader.dataset if hasattr(val_loader, 'dataset') else None,
+            callbacks=[EarlyStoppingCallback(args.lora_early_stopping_patience)],
+            **kwargs)  # hf_args is now args
         self.tokenizer = tokenizer
         
         self.train_loader.collate_fn = llama_collate_fn_w_truncation(self.llm_max_text_len, eval=False)
