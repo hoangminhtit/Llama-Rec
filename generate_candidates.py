@@ -26,7 +26,13 @@ if __name__ == "__main__":
     # Load best model checkpoint
     model_path = os.path.join(export_root, 'models', 'best_acc_model.pth')
     print(f'Loading model from {model_path}')
-    model.load_state_dict(torch.load(model_path, map_location=args.device))
+    checkpoint = torch.load(model_path, map_location=args.device)
+    
+    # Check if checkpoint contains model_state_dict or is the state_dict itself
+    if 'model_state_dict' in checkpoint:
+        model.load_state_dict(checkpoint['model_state_dict'])
+    else:
+        model.load_state_dict(checkpoint)
     
     # Create trainer
     trainer = LRUTrainer(args, model, train_loader, val_loader, test_loader, export_root, False)
