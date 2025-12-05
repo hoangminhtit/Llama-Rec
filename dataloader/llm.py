@@ -107,7 +107,7 @@ class LLMDataloader():
         self.prompter = Prompter()
         
         self.llm_retrieved_path = args.llm_retrieved_path
-        retrieved_pkl_path = os.path.join(args.llm_retrieved_path, 'best_acc_model.pth')
+        retrieved_pkl_path = os.path.join(args.llm_retrieved_path, 'retrieved.pkl')
         
         if not os.path.exists(retrieved_pkl_path):
             raise FileNotFoundError(
