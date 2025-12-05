@@ -9,9 +9,8 @@ from model import *
 from dataloader import *
 from trainer import *
 
-from transformers import BitsAndBytesConfig
+from transformers import BitsAndBytesConfig, AutoModelForCausalLM
 from pytorch_lightning import seed_everything
-from model import LlamaForCausalLM
 from peft import (
     LoraConfig,
     get_peft_model,
@@ -37,12 +36,14 @@ def main(args, export_root=None):
         load_in_4bit=True,
         bnb_4bit_use_double_quant=True,
         bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.bfloat16
+        bnb_4bit_compute_dtype=torch.float16  # Use float16 instead of bfloat16 to save memory
     )
-    model = LlamaForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         args.llm_base_model,
         quantization_config=bnb_config,
         device_map='auto',
+        torch_dtype=torch.float16,  # Reduce memory usage
+        low_cpu_mem_usage=True,
         cache_dir=args.llm_cache_dir,
     )
     model.gradient_checkpointing_enable()
