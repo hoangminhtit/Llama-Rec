@@ -41,7 +41,7 @@ def main(args, export_root=None):
     model = AutoModelForCausalLM.from_pretrained(
         args.llm_base_model,
         quantization_config=bnb_config,
-        device_map='auto',
+        device_map={'': torch.cuda.current_device()} if torch.cuda.is_available() else 'auto',
         torch_dtype=torch.float16,  # Reduce memory usage
         low_cpu_mem_usage=True,
         cache_dir=args.llm_cache_dir,
